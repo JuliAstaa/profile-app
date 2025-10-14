@@ -1,0 +1,32 @@
+# Virtual environment
+venv/
+.env/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment & config
+*.env
+.env.*
+
+# Database lokal (kalau cuma buat testing/dev)
+*.db
+*.sqlite3
+
+# IDE/editor stuff
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.tmp
