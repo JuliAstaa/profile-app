@@ -1,6 +1,7 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from app.controllers.UserController import UserControllers
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from app.utils.response import Response
 
 class UserRouters:
     def __init__(self):
@@ -18,10 +19,7 @@ class UserRouters:
                 result = self.controllers.create_user(data)
                 return result
             else:
-                return {
-                    "status": 405,
-                    "message": "Method not allowed"
-                }, 405
+                return jsonify(Response.response(405, "Method not allowed")), 405
 
     def router_login(self):
         @self.blueprint.route('/user/login', methods=["POST"])

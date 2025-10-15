@@ -1,5 +1,6 @@
 from app.services.UserService import UserServices
 from app import ProfileApp
+from app.utils.validator import Validator
 
 class UserControllers:
     def __init__(self) -> None:
@@ -9,8 +10,12 @@ class UserControllers:
         with self.session() as session:
             services = UserServices(session)
             try:
-                new_user = services.create_users(data)
-                return new_user.to_dict()
+                errors = Validator.user_validator(session, data)
+                if errors == {}:
+                    user = services.create_users(data)
+                    return user.to_dict()
+                else:
+                    return {"errors": errors}
             except RuntimeError as e:
                 return {"message": str(e)}
 
