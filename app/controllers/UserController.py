@@ -1,6 +1,7 @@
 from app.services.UserService import UserServices
 from app import ProfileApp
 from app.utils.validator import Validator
+from app.utils.response import Response
 
 class UserControllers:
     def __init__(self) -> None:
@@ -13,26 +14,34 @@ class UserControllers:
                 errors = Validator.user_validator(session, data)
                 if errors == {}:
                     user = services.create_users(data)
-                    return user.to_dict()
+                    return Response.success(200, "User created successfully", data=user.to_dict())
                 else:
-                    return {"errors": errors}
+                    return Response.error(400, "User not created", errors=errors)
             except RuntimeError as e:
-                return {"message": str(e)}
+                return Response.error(400, "User not created", errors=e)
 
     def login(self, data):
         with self.session() as session:
             services = UserServices(session)
             try:
-                user = services.login(data)
-                return user
+                errors = Validator.login_validator(session=session, data=data)
+
+                if errors == {}:
+                    user = services.login(data)
+                    return Response.success(200, "User logged in successfully", data=user)
+                else:
+                    return Response.error(400, "User not logged in", errors=errors)
             except RuntimeError as e:
-                return {"message": str(e)}
+                return Response.error(400, "User not logged in", errors=e)
     
     def get_user(self, id):
         with self.session() as session:
             services = UserServices(session)
             try:
                 user = services.get_user(id)
-                return user.to_dict()
+                if user:
+                    return Response.success(200, "User fetched successfully", data=user.to_dict())
+                else:
+                    return Response.error(404, "User not found")
             except RuntimeError as e:
-                return {"message": str(e)}
+                return Response.error(400, "User not fetched", errors=e)

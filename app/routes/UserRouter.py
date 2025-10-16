@@ -12,7 +12,7 @@ class UserRouters:
         self.router_profile()
         
     def router_register(self):
-        @self.blueprint.route('/user/add', methods=["POST"])
+        @self.blueprint.route('/user/register', methods=["POST"])
         def register():
             if request.method == "POST":
                 data = request.get_json()
@@ -36,7 +36,7 @@ class UserRouters:
 
     def router_profile(self):
         @self.blueprint.route('/user/profile', methods=["GET"])
-        @jwt_required(optional=True, refresh=True)
+        @jwt_required()
         def profile():
             if request.method == "GET":
                 id = get_jwt_identity()
