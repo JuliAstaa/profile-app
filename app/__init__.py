@@ -28,8 +28,10 @@ class ProfileApp:
     def router(self) -> None:
         from app.routes.helloworldRouter import InitRoute
         from app.routes.UserRouter import UserRouters
+        from app.routes.ProfileRouter import ProfileRouter
         self.app.register_blueprint(InitRoute().blueprint)
         self.app.register_blueprint(UserRouters().blueprint)
+        self.app.register_blueprint(ProfileRouter().blueprint)
 
     def init_db(self) -> None:
         database_uri = f"sqlite:///{os.path.join(self.abs_path, 'profile.db')}"

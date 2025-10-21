@@ -1,4 +1,4 @@
-from app.models.profile import Users
+from app.models.profile import Users, Profile
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, create_refresh_token
 from datetime import datetime, timedelta, timezone
@@ -13,11 +13,16 @@ class UserServices:
         try:
             new_user = Users(**data)
             self.session.add(new_user)
+            self.session.flush()
+
+            new_profile = Profile(id_user=new_user.id)
+            self.session.add(new_profile)
+            
             self.session.commit()
             return new_user
         except Exception as e:
             self.session.rollback()
-            raise {"message": str(e)}
+            raise e
     
     def login(self, data):
         now = time.time()
